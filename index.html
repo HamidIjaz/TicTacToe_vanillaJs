@@ -1,0 +1,119 @@
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<!-- this is how we link up the stylesheet -->
+<link href="css/style.css" rel="stylesheet" type="text/css">
+<!-- And this is how we link up the JS! -->
+<!-- Be sure to give your game a fun title -->
+<title>Tic Tac Toe</title>
+</head>
+
+<body style="font-size: 50px">
+	
+	<h1>Tic-Tac-Toe</h1>
+<h2>It's X's turn!</h2>
+<!-- Many websites are just divs on divs on divs. Pay attention to the class and id attributes. We will be using those later to style and find elements in the document -->
+<div class="flex-container flex-column">
+<div class="flex-container flex-wrap" id="board">
+<div class="square"></div>
+<div class="square"></div>
+<div class="square"></div>
+<div class="square"></div>
+<div class="square"></div>
+<div class="square"></div>
+<div class="square"></div>
+<div class="square"></div>
+<div class="square"></div>
+</div>
+<!-- A reset button because users are going to want to play round after round of your glorious game without ever refreshing the browser! -->
+<button id="reset-button">reset</button>
+</div>
+<script type="text/javascript">
+	
+	console.log('Your JS is linked up. Be the person you needed when you were little.')
+
+console.log(document.title);
+
+
+
+/*----- app's state (variables) -----*/
+let board;
+let turn = 'X';
+let win=null;
+/*----- constants -----*/
+
+const winningCombos = [
+[0, 1, 2],
+[3, 4, 5],
+[6, 7, 8],
+[0, 3, 6], 
+[1, 4, 7],
+[2, 5, 8],
+[0, 4, 8],
+[2, 4, 6]
+];
+
+/*----- cached element references -----*/
+const squares = Array.from(document.querySelectorAll('#board div'));
+const messages = document.querySelector('h2');
+
+
+/*----- event listeners -----*/
+document.getElementById('board').addEventListener('click', handleTurn);
+document.getElementById('reset-button').addEventListener('click', init);
+
+/*----- functions -----*/
+
+function init() {
+board = [
+'', '', '',
+'', '', '',
+'', '', ''
+];
+render();
+};
+
+init();
+
+function render() {
+board.forEach(function(mark, index){
+console.log(mark, index);
+//this sets the text content of the square of the same position to the mark on the board. 
+squares[index].textContent = mark;
+});
+messages.textContent = win === 'T' ? `That's a tie, queen!` : win ? `${win} wins the game!` : `It's ${turn}'s turn!`;
+};
+
+
+
+function handleTurn(event) {
+let idx = squares.findIndex(function(square) {
+return square === event.target;
+});
+
+board[idx] = turn;
+// check your console logs to make sure it's working!
+
+//console.log(board);
+
+turn = turn === 'X' ? 'O' : 'X';
+
+win = getWinner();
+if (win!=null) {
+
+	init();
+}
+render();
+};
+
+
+function getWinner() {
+let winner = null;
+winningCombos.forEach(function(combo, index) {
+if (board[combo[0]] && board[combo[0]] === board[combo[1]] && board[combo[0]] === board[combo[2]]) winner = board[combo[0]];
+});
+return winner ? winner : board.includes('') ? null : 'T';
+};
+</script>
+</body>
